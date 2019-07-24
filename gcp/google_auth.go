@@ -42,23 +42,23 @@ type gcloudAuth struct {
 
 func getGCPClient(d *schema.ResourceData) (interface{}, error) {
 
+	zone := d.Get("zone").(string)
+	if zone == "" {
+		return nil, fmt.Errorf("Zone is not set and hence you cannot initialize client")
+	}
 	credspath := d.Get("credentials").(string)
 	if credspath != "" {
 		client, err := getCustomClient(credspath)
 		if err != nil {
 			return auth, err
 		}
-		client.Zone = d.Get("zone").(string)
+		client.Zone = zone
 		client.ProjectID = client.GCPSVCauth.ProjectID
 		return client, nil
 	}
 	client, err := getDefaultClient()
 	if err != nil {
 		return nil, fmt.Errorf("Unable to fetch the default client")
-	}
-	zone := d.Get("zone").(string)
-	if zone == "" {
-		return nil, fmt.Errorf("Zone is not set and hence you cannot initialize client")
 	}
 	project := d.Get("project").(string)
 	if project == "" {
