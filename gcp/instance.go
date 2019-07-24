@@ -39,15 +39,15 @@ var (
 func (auth *gcloudAuth) instanceType(input instypeInput) (instype, error) {
 	ctx := context.Background()
 
-	auth.Scopes = []string{compute.CloudPlatformScope}
-	client := auth.getClient()
+	/*auth.Scopes = []string{compute.CloudPlatformScope}
+	client := auth.getClient()*/
 
-	computeService, err := compute.New(client)
+	computeService, err := compute.New(auth.Client)
 	if err != nil {
 		return instype{}, err
 	}
 
-	resp, err := computeService.MachineTypes.Get(auth.GCPSVCauth.ProjectID, auth.Zone, input.machineType).Context(ctx).Do()
+	resp, err := computeService.MachineTypes.Get(auth.ProjectID, auth.Zone, input.machineType).Context(ctx).Do()
 	if err != nil {
 		return instype{}, err
 	}

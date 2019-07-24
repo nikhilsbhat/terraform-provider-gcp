@@ -32,6 +32,7 @@ type gcpSVCred struct {
 
 type gcloudAuth struct {
 	GCPSVCauth *gcpSVCred
+	ProjectID  string
 	Scopes     []string
 	JSONPath   string
 	Zone       string
@@ -48,13 +49,23 @@ func getGCPClient(d *schema.ResourceData) (interface{}, error) {
 			return auth, err
 		}
 		client.Zone = d.Get("zone").(string)
+		client.ProjectID = client.GCPSVCauth.ProjectID
 		return client, nil
 	}
 	client, err := getDefaultClient()
 	if err != nil {
 		return nil, fmt.Errorf("Unable to fetch the default client")
 	}
-	client.Zone = d.Get("zone").(string)
+	zone := d.Get("zone").(string)
+	if zone == "" {
+		return nil, fmt.Errorf("Zone is not set and hence you cannot initialize client")
+	}
+	project := d.Get("project").(string)
+	if project == "" {
+		return nil, fmt.Errorf("Project ID is not set and hence you cannot initialize client")
+	}
+	client.Zone = zone
+	client.ProjectID = project
 	return client, nil
 }
 
@@ -84,7 +95,7 @@ func getCustomClient(path string) (*gcloudAuth, error) {
 
 	auth.GCPSVCauth = &jsonAuth
 	auth.JSONPath = path
-
+	auth.Scopes = []string{compute.CloudPlatformScope}
 	client := auth.getClient()
 	if client == nil {
 		return auth, fmt.Errorf("Unbale to initialize custom client")

@@ -37,8 +37,8 @@ func instancetype() *schema.Resource {
 			"zone": {
 				Type:        schema.TypeString,
 				Description: "Name of the gcp zone which has to be used while initializing the client",
+				Optional:    true,
 				Computed:    true,
-				ForceNew:    true,
 			},
 
 			"maximum_persistent_disks": {
@@ -80,7 +80,7 @@ func resourceReadItem(d *schema.ResourceData, m interface{}) error {
 
 	inputType := new(instypeInput)
 	inputType.machineType = d.Id()
-	inputType.zone = d.Get("zone").(string)
+	//client.Zone = d.Get("zone").(string)
 	intype, err := client.instanceType(*inputType)
 	if err != nil {
 		return errwrap.Wrapf(getStringOfMessage(err), err)
