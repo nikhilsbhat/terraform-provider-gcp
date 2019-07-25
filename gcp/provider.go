@@ -39,7 +39,7 @@ func Provider() terraform.ResourceProvider {
 		},
 
 		ResourcesMap: map[string]*schema.Resource{
-			"gcp_type": instancetype(),
+			"gcp_instance_type": instancetype(),
 		},
 
 		ConfigureFunc: getGCPClient,
