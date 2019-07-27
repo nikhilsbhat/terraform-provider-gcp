@@ -56,11 +56,6 @@ func getInstanceType(d *schema.ResourceData, m interface{}) error {
 
 	inputType := new(instypeInput)
 	inputType.machineType = d.Get("machine_type").(string)
-	//inputType.zone = d.Get("zone").(string)
-	/*err := writeFunc(client)
-	if err != nil {
-		return errwrap.Wrapf("Error from gcp "+getStringOfMessage(err), err)
-	}*/
 	intype, err := client.instanceType(*inputType)
 	if err != nil {
 		return errwrap.Wrapf("Error from gcp "+getStringOfMessage(err), err)
@@ -80,7 +75,6 @@ func resourceReadItem(d *schema.ResourceData, m interface{}) error {
 
 	inputType := new(instypeInput)
 	inputType.machineType = d.Id()
-	//client.Zone = d.Get("zone").(string)
 	intype, err := client.instanceType(*inputType)
 	if err != nil {
 		return errwrap.Wrapf(getStringOfMessage(err), err)

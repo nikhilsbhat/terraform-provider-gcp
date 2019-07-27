@@ -1,4 +1,4 @@
 .DS_Store
 terraform-decode
 terraform-provider-decode
-terraform-provider-gcp
+terraform-provider-gcp*
