@@ -15,7 +15,7 @@ func Provider() terraform.ResourceProvider {
 			"credentials": {
 				Type:         schema.TypeString,
 				Optional:     true,
-				DefaultFunc:  schema.EnvDefaultFunc("GOOGLE_CREDENTIALS", ""),
+				DefaultFunc:  schema.EnvDefaultFunc("GOOGLE_APPLICATION_CREDENTIALS", ""),
 				ValidateFunc: validateCredentials,
 			},
 
