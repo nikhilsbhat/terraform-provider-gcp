@@ -42,7 +42,7 @@ func (auth *gcloudAuth) instanceType(input instypeInput) (instype, error) {
 	/*auth.Scopes = []string{compute.CloudPlatformScope}
 	client := auth.getClient()*/
 
-	computeService, err := compute.New(auth.Client)
+	computeService, err := compute.New(auth.ComputeClient)
 	if err != nil {
 		return instype{}, err
 	}

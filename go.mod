@@ -3,6 +3,7 @@ module terraform-provider-gcp
 go 1.12
 
 require (
+	cloud.google.com/go v0.36.0
 	github.com/hashicorp/errwrap v1.0.0
 	github.com/hashicorp/terraform v0.12.5
 	golang.org/x/net v0.0.0-20190502183928-7f726cade0ab

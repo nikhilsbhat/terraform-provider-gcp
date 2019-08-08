@@ -6,6 +6,7 @@ import (
 
 	"context"
 
+	"cloud.google.com/go/pubsub"
 	"github.com/hashicorp/terraform/helper/schema"
 	"golang.org/x/oauth2"
 	"golang.org/x/oauth2/google"
@@ -15,6 +16,10 @@ import (
 
 var (
 	auth = new(gcloudAuth)
+)
+
+const (
+	cloudPlatformScope = "https://www.googleapis.com/auth/cloud-platform"
 )
 
 type gcpSVCred struct {
@@ -37,7 +42,9 @@ type gcloudAuth struct {
 	JSONPath   string
 	Zone       string
 	RawJSON    []byte
-	Client     *http.Client
+	// Though the client types are same for different clients, the scopes used for initializing them differes.
+	ComputeClient *http.Client
+	PubSubClient  *http.Client
 }
 
 func getGCPClient(d *schema.ResourceData) (interface{}, error) {
@@ -76,7 +83,7 @@ func getDefaultClient() (*gcloudAuth, error) {
 	if err != nil {
 		return auth, err
 	}
-	auth.Client = client
+	auth.ComputeClient = client
 	return auth, nil
 }
 
@@ -95,12 +102,23 @@ func getCustomClient(path string) (*gcloudAuth, error) {
 
 	auth.GCPSVCauth = &jsonAuth
 	auth.JSONPath = path
-	auth.Scopes = []string{compute.CloudPlatformScope}
+
+	// Configuring the scopes required to initialize compute client
+	auth.Scopes = []string{cloudPlatformScope, compute.ComputeScope}
 	client := auth.getClient()
 	if client == nil {
-		return auth, fmt.Errorf("Unbale to initialize custom client")
+		return auth, fmt.Errorf("Unbale to initialize custom compute client")
 	}
-	auth.Client = client
+	auth.ComputeClient = client
+
+	// Configuring the scopes required to initialize pubsub client
+	auth.Scopes = []string{cloudPlatformScope, pubsub.ScopePubSub}
+	client = auth.getClient()
+	if client == nil {
+		return auth, fmt.Errorf("Unbale to initialize custom pubsub client")
+	}
+	auth.PubSubClient = client
+
 	return auth, nil
 }
 
