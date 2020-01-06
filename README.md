@@ -1,7 +1,7 @@
 # terraform-provider-gcp
 
 
-[![Go Report Card](https://goreportcard.com/report/github.com/nikhilsbhat/terraform-provider-gcp)](https://goreportcard.com/report/github.com/nikhilsbhat/terraform-provider-gcp)
+[![Go Report Card](https://goreportcard.com/badge/github.com/nikhilsbhat/terraform-provider-gcp)](https://goreportcard.com/report/github.com/nikhilsbhat/terraform-provider-gcp)
 
 
 A sample terraform custom provider.
